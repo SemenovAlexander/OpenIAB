@@ -16,6 +16,8 @@ If you need to set custom Unity location, you can do so in the ```OpenIAB/unity_
 Integration
 =====
 Build or download Unity [package](https://github.com/onepf/OpenIAB/releases/download/TAG-OpenIAB-0.9/openiab-unity-plugin-0.2.unitypackage) and import it in your project. There is OpenIAB.jar file in the package, which contains compile output of the plugin and of the [OpenIAB](/) library.
+If you want to use source code instead of jar, you need to put ``` UnityPlugin.java ``` and ``` UnityProxyActivity.java ``` in the /Assets/Plugins/Android/src/org/onepf/openiab folder.
+
 There is also ``` AndroidManifest.xml ``` in the /Assets/Plugins/Android. Developer can add project specific settings to it.
 
 Now you can run demo scene with some test buttons.
@@ -182,6 +184,51 @@ public static void consumeProduct(Purchase purchase);
 // Restores purchases. Needed only for iOS store
 public static void restoreTransactions();
 ```
+
+Android
+=====
+OpenIAB uses proxy activity instead of inheriting Unity activity to simplify integration with other plugins.
+If you already have ```AndroidManifest.xml``` in your project, simply add there our permissions, receiver and activity declaration.
+
+```
+<application ... >
+    
+    ...
+    
+    <activity android:name="org.onepf.openiab.UnityProxyActivity"
+          android:launchMode="singleTask"
+          android:label="@string/app_name"
+          android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen">
+        </activity>
+        
+    <receiver android:name="com.amazon.inapp.purchasing.ResponseReceiver">
+        <intent-filter>
+            <action
+                android:name="com.amazon.inapp.purchasing.NOTIFY"
+                android:permission="com.amazon.inapp.purchasing.Permission.NOTIFY"/>
+        </intent-filter>
+    </receiver>
+    
+</application>
+
+...
+
+<uses-permission android:name="com.android.vending.BILLING"/>
+<uses-permission android:name="android.permission.RECEIVE_SMS"/>
+<uses-permission android:name="android.permission.INTERNET"/>
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+<uses-permission android:name="com.tmoney.vending.INBILLING"/>
+<uses-permission android:name="com.yandex.store.permission.BILLING"/>
+<uses-permission android:name="com.sec.android.iap.permission.BILLING"/>
+<uses-permission android:name="org.onepf.openiab.permission.BILLING"/>
+
+...
+
+<permission android:name="com.tmoney.vending.INBILLING"/>
+```
+
 
 Advanced
 =====

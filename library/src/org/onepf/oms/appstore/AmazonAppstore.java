@@ -87,7 +87,8 @@ public class AmazonAppstore extends DefaultAppstore {
      */
     @Override
     public boolean isBillingAvailable(String packageName) {
-        return isPackageInstaller(packageName);
+    		return true;
+//         return isPackageInstaller(packageName);
     }
     
     @Override
